@@ -17,6 +17,9 @@
 #include "zenoh.h"
 
 int main(int argc, char **argv) {
+    z_reply_null();
+    printf("C = %lu\n", sizeof(_zc_res_s_v));
+
     char *expr = "demo/example/**";
     if (argc > 1) {
         expr = argv[1];

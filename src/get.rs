@@ -155,6 +155,7 @@ pub unsafe extern "C" fn z_reply_err(reply: &z_owned_reply_t) -> z_value_t {
 #[no_mangle]
 #[allow(improper_ctypes_definitions)]
 pub extern "C" fn z_reply_null() -> z_owned_reply_t {
+    println!("Rust = {}", std::mem::size_of::<_zc_res_s_v>());
     None.into()
 }
 
