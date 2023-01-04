@@ -1,3 +1,4 @@
+use crate::GuardedTransmute;
 //
 // Copyright (c) 2017, 2022 ZettaScale Technology.
 //
@@ -13,7 +14,9 @@
 //
 use crate::collections::*;
 use crate::commons::*;
+use crate::define_guarded_transmute;
 use crate::keyexpr::*;
+use crate::platform::z_owned_session_t;
 use crate::session::*;
 use crate::z_closure_sample_call;
 use crate::z_owned_closure_sample_t;
@@ -43,13 +46,16 @@ type PullSubscriber = Option<Box<zenoh::subscriber::PullSubscriber<'static, ()>>
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub struct z_owned_pull_subscriber_t([usize; 1]);
+
+define_guarded_transmute!(PullSubscriber, z_owned_pull_subscriber_t);
+
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub struct z_pull_subscriber_t<'a>(&'a z_owned_pull_subscriber_t);
 
 impl From<PullSubscriber> for z_owned_pull_subscriber_t {
     fn from(val: PullSubscriber) -> Self {
-        unsafe { std::mem::transmute(val) }
+        val.transmute()
     }
 }
 

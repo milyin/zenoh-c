@@ -14,6 +14,7 @@
 use crate::collections::*;
 use crate::commons::*;
 use crate::keyexpr::*;
+use crate::platform::z_owned_session_t;
 use crate::session::*;
 use crate::z_closure_sample_call;
 use crate::z_owned_closure_sample_t;

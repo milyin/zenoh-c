@@ -22,8 +22,8 @@ use zenoh_protocol_core::CongestionControl;
 use zenoh_util::core::{zresult::ErrNo, SyncResolve};
 
 use crate::{
-    _zc_stack_ke, z_congestion_control_t, z_encoding_default, z_encoding_t, z_keyexpr_t,
-    z_priority_t, z_session_t, LOG_INVALID_SESSION,
+    z_congestion_control_t, z_encoding_default, z_encoding_t, z_keyexpr_t,
+    z_priority_t, z_session_t, LOG_INVALID_SESSION, platform::z_owned_publisher_t, define_guarded_transmute, GuardedTransmute,
 };
 
 /// Options passed to the :c:func:`z_declare_publisher` function.
@@ -46,24 +46,11 @@ pub extern "C" fn z_publisher_options_default() -> z_publisher_options_t {
     }
 }
 
-/// An owned zenoh publisher.
-///
-/// Like most `z_owned_X_t` types, you may obtain an instance of `z_X_t` by loaning it using `z_X_loan(&val)`.  
-/// The `z_loan(val)` macro, available if your compiler supports C11's `_Generic`, is equivalent to writing `z_X_loan(&val)`.  
-///
-/// Like all `z_owned_X_t`, an instance will be destroyed by any function which takes a mutable pointer to said instance, as this implies the instance's inners were moved.  
-/// To make this fact more obvious when reading your code, consider using `z_move(val)` instead of `&val` as the argument.  
-/// After a move, `val` will still exist, but will no longer be valid. The destructors are double-drop-safe, but other functions will still trust that your `val` is valid.  
-///
-/// To check if `val` is still valid, you may use `z_X_check(&val)` or `z_check(val)` if your compiler supports `_Generic`, which will return `true` if `val` is valid.
-#[repr(C)]
-pub struct z_owned_publisher_t {
-    pub _ke: _zc_stack_ke,
-    pub _padding: [usize; 3],
-}
+define_guarded_transmute!(Option<Publisher<'_>>, z_owned_publisher_t);
+
 impl<'a> From<Option<Publisher<'a>>> for z_owned_publisher_t {
     fn from(val: Option<Publisher>) -> Self {
-        unsafe { std::mem::transmute(val) }
+        val.transmute()
     }
 }
 impl Deref for z_owned_publisher_t {

@@ -1,4 +1,5 @@
-use crate::{z_closure_reply_drop, z_owned_closure_reply_t, z_owned_reply_t};
+use crate::{z_closure_reply_drop, z_owned_closure_reply_t};
+use crate::platform::z_owned_reply_t;
 use libc::c_void;
 use std::sync::mpsc::TryRecvError;
 /// A closure is a structure that contains all the elements for stateful, memory-leak-free callbacks:
