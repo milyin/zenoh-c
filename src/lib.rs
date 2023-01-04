@@ -40,22 +40,31 @@ pub use crate::publisher::*;
 mod closures;
 pub use closures::*;
 
-#[cfg(target_arch="aarch64")]
-mod platform {
-    mod aarch64;
-    pub use aarch64::z_owned_keyexpr_t;
-    pub use aarch64::z_owned_session_t;
-    pub use aarch64::z_owned_queryable_t;
-    pub use aarch64::z_owned_reply_t;
-    pub use aarch64::z_owned_publisher_t;
-}
+// #[cfg(target_arch="aarch64")]
+// mod platform {
+//     mod aarch64;
+//     mod default;
+//     pub use default::z_owned_keyexpr_t;
+//     pub use default::z_owned_session_t;
+//     pub use default::z_owned_queryable_t;
+//     pub use default::z_owned_publisher_t;
+//     pub use aarch64::z_owned_reply_t;
+// }
 
 // #[cfg(target_arch="x86_64")]
-// mod platform {
-//     mod x86_64;
-//     pub use x86_64::z_owned_reply_t;
-//     pub use x86_64::z_owned_publisher_t;
-// }
+mod platform {
+    mod aarch64;
+    mod x86_64;
+    mod default;
+    pub use default::z_owned_keyexpr_t;
+    pub use default::z_owned_session_t;
+    pub use default::z_owned_queryable_t;
+    pub use default::z_owned_publisher_t;
+#[cfg(target_arch="x86_64")]
+    pub use x86_64::z_owned_reply_t;
+#[cfg(target_arch="aarch64")]
+    pub use x86_64::z_owned_reply_t;
+}
 
 trait GuardedTransmute<D> {
     fn transmute(self) -> D;

@@ -13,7 +13,8 @@ extern "C" {
 #define ZENOH_C_MINOR 7
 #define ZENOH_C_PATCH 0
 
-#define ALIGN(n) __attribute__((aligned(n)))
+#define ALIGN(n)
+// __attribute__((aligned(n)))
 
 #include "zenoh_concrete.h"
 //
